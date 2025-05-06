@@ -1,201 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil dos Alunos</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-    }
-
-    .profile {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 15px;
-    }
-
-    .schoolxp-box {
-      font-weight: bold;
-      margin: 10px 0;
-    }
-
-    .skill-box {
-      margin: 5px 0;
-    }
-
-    .skill-name {
-      display: inline-block;
-      width: 200px;
-    }
-
-    .level-bar {
-      background-color: #f0f0f0;
-      width: 100%;
-      height: 20px;
-      border-radius: 5px;
-      margin-top: 5px;
-    }
-
-    .level-bar-fill {
-      height: 100%;
-      background-color: #4caf50;
-      border-radius: 5px;
-    }
-
-    #popupXP {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-
-    #popupXP .popup-content {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      text-align: center;
-    }
-
-    #popupXP .popup-content input {
-      padding: 5px;
-      margin: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    #popupXP .popup-content button {
-      padding: 10px 20px;
-      margin: 10px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #popupXP .popup-content button:hover {
-      background-color: #45a049;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Matheria | Perfil</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <h1>Perfiles dos Alunos</h1>
-  
-  <!-- Caixa de Entrada de Código -->
-  <textarea id="codeInput" rows="4" cols="50" placeholder="Digite o código aqui..."></textarea><br>
-  <button onclick="interpretarCodigo()">Interpretar Código</button>
-
-  <!-- Área para exibir os perfis dos alunos (inicialmente vazia) -->
-  <div id="profiles"></div>
-
-  <!-- Popup para edição do School XP -->
-  <div id="popupXP" class="hidden">
-    <div class="popup-content">
-      <h3>Alterar School XP</h3>
-      <input type="text" id="nomeAluno" placeholder="Nome do Aluno">
-      <input type="number" id="valorXP" placeholder="Novo School XP" min="0">
-      <br>
-      <button onclick="salvarXP()">Salvar</button>
-      <button onclick="fecharPopup()">Fechar</button>
-    </div>
+  <div class="admin-console">
+    <h2>Console de Admin</h2>
+    <input type="text" id="usernameInput" placeholder="Digite o nome do aluno..." />
+    <button onclick="createProfile()">Executar</button>
   </div>
 
-  <script>
-    let alunos = [];
+  <div class="profile-container" id="profileContainer">
+    <!-- Perfil será gerado aqui -->
+  </div>
 
-    // Função para interpretar o código e gerar HTML com base no comando
-    function interpretarCodigo() {
-      const input = document.getElementById('codeInput').value.trim();
-
-      if (input.toLowerCase() === 'setschoolxp') {
-        document.getElementById('popupXP').classList.remove('hidden');
-        return;
-      }
-
-      const lines = input.split('\n');
-      let profilesHTML = '';
-      alunos = []; // Resetar os alunos antes de adicionar novos
-
-      for (let line of lines) {
-        try {
-          const data = JSON.parse(line);
-          alunos.push(data);
-          profilesHTML += gerarHTMLAluno(data);
-        } catch (e) {
-          profilesHTML += `<p style='color:red;'>Erro ao interpretar linha: ${line}</p>`;
-        }
-      }
-      document.getElementById('profiles').innerHTML = profilesHTML;
-    }
-
-    // Função para gerar o HTML do aluno com base nos dados
-    function gerarHTMLAluno(data) {
-      const nome = data.nome;
-      const skills = data.skills || {};
-      const schoolXP = data.schoolXP || 0;
-      let skillHTML = '';
-
-      for (let materia in skills) {
-        const nivel = skills[materia];
-        const porcentagem = Math.min((nivel / 50) * 100, 100);
-        skillHTML += `
-          <div class="skill-box">
-            <div class="skill-name">${materia} (Nível ${nivel})</div>
-            <div class="level-bar">
-              <div class="level-bar-fill" style="width: ${porcentagem}%;"></div>
-            </div>
-          </div>
-        `;
-      }
-
-      return `
-        <div class="profile">
-          <h3>${nome}</h3>
-          <div class="schoolxp-box">School XP: ${schoolXP}</div>
-          ${skillHTML}
-        </div>
-      `;
-    }
-
-    // Função para salvar o valor de School XP
-    function salvarXP() {
-      const nome = document.getElementById('nomeAluno').value;
-      const valor = parseInt(document.getElementById('valorXP').value);
-
-      for (let aluno of alunos) {
-        if (aluno.nome === nome) {
-          aluno.schoolXP = valor;
-        }
-      }
-
-      const htmlAtualizado = alunos.map(gerarHTMLAluno).join('');
-      document.getElementById('profiles').innerHTML = htmlAtualizado;
-      fecharPopup();
-    }
-
-    // Função para fechar o popup
-    function fecharPopup() {
-      document.getElementById('popupXP').classList.add('hidden');
-    }
-
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
