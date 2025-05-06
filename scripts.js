@@ -1,129 +1,58 @@
-let alunos = [
-  {
-    nome: "Davi M",
-    skills: {
-      "Matemática": 12,
-      "Física": 0,
-      "Geografia": 0,
-      "Biologia": 0,
-      "Qúimica": 0,
-      "Produção de Texto": 0,
-      "Projeto de Vida": 0,
-      "Projeto Integrador": 0,
-      "Por trás do Texto": 0,
-      "Grandezas Físicas do Cotidiano": 0,
-      "Conversões e Logarítmo": 0,
-      "Educação Física": 0,
-      "Artes": 0,
-      "Educação Financeira": 0,
-      "Português": 0,
-      "Literatura": 0,
-      "Zoom In": 0
-    },
-    schoolXP: 0
-  },
-  {
-    nome: "Isaque",
-    skills: {
-      "Matemática": 0,
-      "Física": 0,
-      "Geografia": 0,
-      "Biologia": 0,
-      "Qúimica": 0,
-      "Produção de Texto": 0,
-      "Projeto de Vida": 0,
-      "Projeto Integrador": 0,
-      "Por trás do Texto": 0,
-      "Grandezas Físicas do Cotidiano": 0,
-      "Conversões e Logarítmo": 0,
-      "Educação Física": 0,
-      "Artes": 0,
-      "Educação Financeira": 0,
-      "Português": 0,
-      "Literatura": 0,
-      "Zoom In": 0
-    },
-    schoolXP: 0
-  }
+const predefinedUsers = {
+  "Davi": 1,
+  "Isaque": 1,
+  "Isabella": 1,
+  "Thamires": 1,
+  "Ana Clara": 1,
+  "Antônio": 1,
+  "Lucas Maciel": 1,
+  "Samuel": 1
+};
+
+const subjects = [
+  "Mathemagix",  // Matemática
+  "Biocódice",   // Biologia
+  "Quimicraft",  // Química
+  "Física Nova", // Física
+  "Literaris",   // Literatura/Português
+  "História Arcana", // História
+  "GeoMundos",   // Geografia
+  "Lingualia"    // Inglês
 ];
 
-// Função para interpretar o código e gerar HTML com base no comando
-function interpretarCodigo() {
-  const input = document.getElementById('codeInput').value.trim();
+function createProfile() {
+  const username = document.getElementById("usernameInput").value.trim();
+  if (!username) return;
 
-  if (input.toLowerCase() === 'setschoolxp') {
-    document.getElementById('popupXP').classList.remove('hidden');
-    return;
-  }
+  const profileContainer = document.getElementById("profileContainer");
+  profileContainer.innerHTML = ""; // Clear previous
 
-  const lines = input.split('\n');
-  let profilesHTML = '';
-  alunos = [];
+  const level = predefinedUsers.hasOwnProperty(username) ? 1 : 0;
 
-  for (let line of lines) {
-    try {
-      const data = JSON.parse(line);
-      alunos.push(data);
-      profilesHTML += gerarHTMLAluno(data);
-    } catch (e) {
-      profilesHTML += `<p style='color:red;'>Erro ao interpretar linha: ${line}</p>`;
-    }
-  }
-  document.getElementById('profiles').innerHTML = profilesHTML;
+  const profileHeader = document.createElement("div");
+  profileHeader.className = "profile-name";
+  profileHeader.innerText = `Perfil de ${username}`;
+  profileContainer.appendChild(profileHeader);
+
+  subjects.forEach(subject => {
+    const skillDiv = document.createElement("div");
+    skillDiv.className = "skill";
+
+    const skillName = document.createElement("div");
+    skillName.className = "skill-name";
+    skillName.innerText = `${subject} - Nível ${level}`;
+
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar";
+
+    const progressFill = document.createElement("div");
+    progressFill.className = "progress-fill";
+    progressFill.style.width = `${level * 5}%`; // Só um efeito visual
+    progressFill.innerText = `${level}`;
+
+    progressBar.appendChild(progressFill);
+    skillDiv.appendChild(skillName);
+    skillDiv.appendChild(progressBar);
+    profileContainer.appendChild(skillDiv);
+  });
 }
-
-// Função para gerar o HTML do aluno com base nos dados
-function gerarHTMLAluno(data) {
-  const nome = data.nome;
-  const skills = data.skills || {};
-  const schoolXP = data.schoolXP || 0;
-  let skillHTML = '';
-
-  for (let materia in skills) {
-    const nivel = skills[materia];
-    const porcentagem = Math.min((nivel / 50) * 100, 100);
-    skillHTML += `
-      <div class="skill-box">
-        <div class="skill-name">${materia} (Nível ${nivel})</div>
-        <div class="level-bar">
-          <div class="level-bar-fill" style="width: ${porcentagem}%;"></div>
-        </div>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="profile">
-      <h3>${nome}</h3>
-      <div class="schoolxp-box">School XP: ${schoolXP}</div>
-      ${skillHTML}
-    </div>
-  `;
-}
-
-// Função para salvar o valor de School XP
-function salvarXP() {
-  const nome = document.getElementById('nomeAluno').value;
-  const valor = parseInt(document.getElementById('valorXP').value);
-
-  for (let aluno of alunos) {
-    if (aluno.nome === nome) {
-      aluno.schoolXP = valor;
-    }
-  }
-
-  const htmlAtualizado = alunos.map(gerarHTMLAluno).join('');
-  document.getElementById('profiles').innerHTML = htmlAtualizado;
-  fecharPopup();
-}
-
-// Função para fechar o popup
-function fecharPopup() {
-  document.getElementById('popupXP').classList.add('hidden');
-}
-
-// Renderiza os usuários ao inicializar
-document.addEventListener("DOMContentLoaded", function() {
-  const profilesHTML = alunos.map(gerarHTMLAluno).join('');
-  document.getElementById('profiles').innerHTML = profilesHTML;
-});
