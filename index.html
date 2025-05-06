@@ -1,159 +1,119 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mathéria - Habilidades do EM </title>
+  <title>Perfil dos Alunos</title>
   <style>
     body {
-      background: linear-gradient(to bottom, #2e8b57, #1c1c1c);
-      color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 1000px;
-      margin: auto;
       padding: 20px;
     }
-    h1, h2 {
+
+    h1 {
       text-align: center;
-      margin-bottom: 10px;
     }
-    .skill-box {
-      background-color: #333;
-      border-radius: 10px;
-      padding: 15px;
+
+    .profile {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+
+    .schoolxp-box {
+      font-weight: bold;
       margin: 10px 0;
     }
+
+    .skill-box {
+      margin: 5px 0;
+    }
+
     .skill-name {
-      font-size: 1.2em;
-      margin-bottom: 5px;
+      display: inline-block;
+      width: 200px;
     }
+
     .level-bar {
-      background-color: #555;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-    .level-bar-fill {
-      height: 20px;
-      background-color: #4caf50;
-      width: 0%;
-    }
-    table {
+      background-color: #f0f0f0;
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
+      height: 20px;
+      border-radius: 5px;
+      margin-top: 5px;
     }
-    th, td {
-      border: 1px solid #777;
-      padding: 8px;
-      text-align: center;
-    }
-    th {
-      background-color: #444;
-    }
-    .profile-input {
-      margin: 20px auto;
-      text-align: center;
-    }
-    .profile-input textarea {
-      width: 90%;
-      height: 100px;
-      padding: 10px;
-      font-size: 14px;
-    }
-    .profile-input button {
-      margin-top: 10px;
-      padding: 10px 20px;
+
+    .level-bar-fill {
+      height: 100%;
       background-color: #4caf50;
-      border: none;
+      border-radius: 5px;
+    }
+
+    #popupXP {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #popupXP .popup-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    #popupXP .popup-content input {
+      padding: 5px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #popupXP .popup-content button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #4caf50;
       color: white;
-      font-weight: bold;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    .profile-section {
-      margin-top: 30px;
+
+    #popupXP .popup-content button:hover {
+      background-color: #45a049;
     }
-    .profile {
-      background-color: #222;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 10px 0;
-    }
-    .profile h3 {
-      margin: 0 0 10px 0;
-    }
-    .schoolxp-box {
-      background-color: #444;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 8px;
-    }
+
     .hidden {
       display: none;
-    }
-    .popup {
-      background: #333;
-      border: 2px solid #4caf50;
-      padding: 20px;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 10px;
-      z-index: 1000;
-    }
-    .popup input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-    }
-    .popup button {
-      margin-top: 10px;
-      padding: 10px;
-      width: 100%;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Mathéria</h1>
-    <h2>Sistema de Skills do Ensino Médio</h2>
 
-    <div class="profile-input">
-      <h3>Comando</h3>
-      <textarea id="codeInput" placeholder="Digite um comando ou cole o código do perfil"></textarea><br>
-      <button onclick="interpretarCodigo()">Executar</button>
+  <h1>Perfiles dos Alunos</h1>
+  
+  <!-- Caixa de Entrada de Código -->
+  <textarea id="codeInput" rows="4" cols="50" placeholder="Digite o código aqui..."></textarea><br>
+  <button onclick="interpretarCodigo()">Interpretar Código</button>
+
+  <div id="profiles"></div>
+
+  <!-- Popup para edição do School XP -->
+  <div id="popupXP" class="hidden">
+    <div class="popup-content">
+      <h3>Alterar School XP</h3>
+      <input type="text" id="nomeAluno" placeholder="Nome do Aluno">
+      <input type="number" id="valorXP" placeholder="Novo School XP" min="0">
+      <br>
+      <button onclick="salvarXP()">Salvar</button>
+      <button onclick="fecharPopup()">Fechar</button>
     </div>
-
-    <div class="profile-section" id="profiles"></div>
-
-    <h2>Tabela de XP por Nível</h2>
-    <table>
-      <thead>
-        <tr><th>Nível</th><th>XP Necessário</th><th>XP Total</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>1</td><td>50</td><td>50</td></tr>
-        <tr><td>2</td><td>60</td><td>110</td></tr>
-        <tr><td>3</td><td>72</td><td>182</td></tr>
-        <tr><td>4</td><td>86</td><td>268</td></tr>
-        <tr><td>5</td><td>103</td><td>371</td></tr>
-        <tr><td>...</td><td>...</td><td>...</td></tr>
-        <tr><td>50</td><td>379184</td><td>2274835</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div id="popupXP" class="popup hidden">
-    <h3>Definir School XP</h3>
-    <input type="text" id="nomeAluno" placeholder="Nome do aluno">
-    <input type="number" id="valorXP" placeholder="Valor de XP">
-    <button onclick="salvarXP()">Salvar</button>
-    <button onclick="fecharPopup()">Fechar</button>
   </div>
 
   <script>
@@ -206,9 +166,9 @@
       }
     ];
 
+    // Função para interpretar o código e gerar HTML com base no comando
     function interpretarCodigo() {
       const input = document.getElementById('codeInput').value.trim();
-      let profilesHTML = '';
 
       if (input.toLowerCase() === 'setschoolxp') {
         document.getElementById('popupXP').classList.remove('hidden');
@@ -216,20 +176,22 @@
       }
 
       const lines = input.split('\n');
-      alunos.forEach(aluno => {
-        // Verificar se o nome corresponde ao aluno
-        if (lines.some(line => JSON.parse(line).nome === aluno.nome)) {
-          profilesHTML += gerarHTMLAluno(aluno);
+      let profilesHTML = '';
+      alunos = [];
+
+      for (let line of lines) {
+        try {
+          const data = JSON.parse(line);
+          alunos.push(data);
+          profilesHTML += gerarHTMLAluno(data);
+        } catch (e) {
+          profilesHTML += `<p style='color:red;'>Erro ao interpretar linha: ${line}</p>`;
         }
-      });
-
-      if (!profilesHTML) {
-        profilesHTML = "<p style='color:red;'>Aluno não encontrado ou dados incompletos!</p>";
       }
-
       document.getElementById('profiles').innerHTML = profilesHTML;
     }
 
+    // Função para gerar o HTML do aluno com base nos dados
     function gerarHTMLAluno(data) {
       const nome = data.nome;
       const skills = data.skills || {};
@@ -258,6 +220,7 @@
       `;
     }
 
+    // Função para salvar o valor de School XP
     function salvarXP() {
       const nome = document.getElementById('nomeAluno').value;
       const valor = parseInt(document.getElementById('valorXP').value);
@@ -273,6 +236,7 @@
       fecharPopup();
     }
 
+    // Função para fechar o popup
     function fecharPopup() {
       document.getElementById('popupXP').classList.add('hidden');
     }
@@ -283,5 +247,6 @@
       document.getElementById('profiles').innerHTML = profilesHTML;
     });
   </script>
+
 </body>
 </html>
