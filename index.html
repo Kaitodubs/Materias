@@ -102,6 +102,7 @@
   <textarea id="codeInput" rows="4" cols="50" placeholder="Digite o código aqui..."></textarea><br>
   <button onclick="interpretarCodigo()">Interpretar Código</button>
 
+  <!-- Área para exibir os perfis dos alunos (inicialmente vazia) -->
   <div id="profiles"></div>
 
   <!-- Popup para edição do School XP -->
@@ -117,54 +118,7 @@
   </div>
 
   <script>
-    let alunos = [
-      {
-        nome: "Davi M",
-        skills: {
-          "Matemática": 12,
-          "Física": 0,
-          "Geografia": 0,
-          "Biologia": 0,
-          "Qúimica": 0,
-          "Produção de Texto": 0,
-          "Projeto de Vida": 0,
-          "Projeto Integrador": 0,
-          "Por trás do Texto": 0,
-          "Grandezas Físicas do Cotidiano": 0,
-          "Conversões e Logarítmo": 0,
-          "Educação Física": 0,
-          "Artes": 0,
-          "Educação Financeira": 0,
-          "Português": 0,
-          "Literatura": 0,
-          "Zoom In": 0
-        },
-        schoolXP: 0
-      },
-      {
-        nome: "Isaque",
-        skills: {
-          "Matemática": 0,
-          "Física": 0,
-          "Geografia": 0,
-          "Biologia": 0,
-          "Qúimica": 0,
-          "Produção de Texto": 0,
-          "Projeto de Vida": 0,
-          "Projeto Integrador": 0,
-          "Por trás do Texto": 0,
-          "Grandezas Físicas do Cotidiano": 0,
-          "Conversões e Logarítmo": 0,
-          "Educação Física": 0,
-          "Artes": 0,
-          "Educação Financeira": 0,
-          "Português": 0,
-          "Literatura": 0,
-          "Zoom In": 0
-        },
-        schoolXP: 0
-      }
-    ];
+    let alunos = [];
 
     // Função para interpretar o código e gerar HTML com base no comando
     function interpretarCodigo() {
@@ -177,7 +131,7 @@
 
       const lines = input.split('\n');
       let profilesHTML = '';
-      alunos = [];
+      alunos = []; // Resetar os alunos antes de adicionar novos
 
       for (let line of lines) {
         try {
@@ -241,11 +195,6 @@
       document.getElementById('popupXP').classList.add('hidden');
     }
 
-    // Renderiza os usuários ao inicializar
-    document.addEventListener("DOMContentLoaded", function() {
-      const profilesHTML = alunos.map(gerarHTMLAluno).join('');
-      document.getElementById('profiles').innerHTML = profilesHTML;
-    });
   </script>
 
 </body>
