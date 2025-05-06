@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchoolBlock - Sistema de Skills</title>
+  <title>Mathéria - Habilidades do EM </title>
   <style>
     body {
       background: linear-gradient(to bottom, #2e8b57, #1c1c1c);
@@ -120,7 +120,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>SchoolBlock</h1>
+    <h1>Mathéria</h1>
     <h2>Sistema de Skills do Ensino Médio</h2>
 
     <div class="profile-input">
@@ -229,6 +229,62 @@
     function fecharPopup() {
       document.getElementById('popupXP').classList.add('hidden');
     }
+
+    // Usuários padrão com as skills zeradas
+    alunos = [
+      {
+        nome: "Davi M",
+        skills: {
+          "Matemática": 0,
+          "Física": 0,
+          "Geografia": 0,
+          "Biologia": 0,
+          "Qúimica": 0,
+          "Produção de Texto": 0,
+          "Projeto de Vida": 0,
+          "Projeto Integrador": 0,
+          "Por trás do Texto": 0,
+          "Grandezas Físicas do Cotidiano": 0,
+          "Conversões e Logarítmo": 0,
+          "Educação Física": 0,
+          "Artes": 0,
+          "Educação Financeira": 0,
+          "Português": 0,
+          "Literatura": 0,
+          "Zoom In": 0
+        },
+        schoolXP: 0
+      },
+      {
+        nome: "Isaque",
+        skills: {
+          "Matemática": 0,
+          "Física": 0,
+          "Geografia": 0,
+          "Biologia": 0,
+          "Qúimica": 0,
+          "Produção de Texto": 0,
+          "Projeto de Vida": 0,
+          "Projeto Integrador": 0,
+          "Por trás do Texto": 0,
+          "Grandezas Físicas do Cotidiano": 0,
+          "Conversões e Logarítmo": 0,
+          "Educação Física": 0,
+          "Artes": 0,
+          "Educação Financeira": 0,
+          "Português": 0,
+          "Literatura": 0,
+          "Zoom In": 0
+        },
+        schoolXP: 0
+      }
+    ];
+
+    // Renderiza os usuários ao inicializar
+    document.addEventListener("DOMContentLoaded", function() {
+      const profilesHTML = alunos.map(gerarHTMLAluno).join('');
+      document.getElementById('profiles').innerHTML = profilesHTML;
+    });
   </script>
 </body>
 </html>
